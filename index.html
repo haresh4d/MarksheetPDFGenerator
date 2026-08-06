@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Marksheet Distribution PDF Tool</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+          sans-serif;
+        padding: 40px 30px 20px 30px;
+        background-color: #f5f5f7;
+        color: #1d1d1f;
+        -webkit-user-select: none;
+      }
+      .app-region {
+        -webkit-app-region: drag;
+        height: 28px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+      h1 {
+        font-size: 21px;
+        font-weight: 600;
+        margin-bottom: 25px;
+        text-align: center;
+        letter-spacing: -0.5px;
+      }
+      .card {
+        background: #ffffff;
+        padding: 18px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 18px;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 13px;
+        color: #515154;
+      }
+      .input-row {
+        display: flex;
+        gap: 10px;
+      }
+      input[type="text"] {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid #d2d2d7;
+        border-radius: 8px;
+        font-size: 13px;
+        background-color: #fbfbfd;
+        outline: none;
+      }
+      button {
+        background-color: #0071e3;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      button:hover {
+        background-color: #0077ed;
+      }
+      button:active {
+        background-color: #0062c3;
+      }
+      button.btn-browse {
+        background-color: #e8e8ed;
+        color: #0071e3;
+        font-weight: 600;
+      }
+      button.btn-browse:hover {
+        background-color: #dedede;
+      }
+      .btn-action {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        background-color: #34c759;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .btn-action:hover {
+        background-color: #30db5b;
+      }
+      .btn-action:disabled {
+        background-color: #aeaeae;
+        cursor: not-allowed;
+      }
+      #status {
+        margin-top: 15px;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        display: none;
+        text-align: center;
+        font-weight: 500;
+      }
+      .success {
+        background-color: #e3f9e5;
+        color: #14532d;
+        border: 1px solid #34c759;
+      }
+      .error {
+        background-color: #fdf2f2;
+        color: #741b1b;
+        border: 1px solid #ff453a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-region"></div>
+    <h1>Marksheet Distribution PDF Builder</h1>
+
+    <div class="card">
+      <label>INPUT EXCEL FILE (.XLSX)</label>
+      <div class="input-row">
+        <input
+          type="text"
+          id="file-path"
+          readonly
+          placeholder="Click browse to select sheet..."
+        />
+        <button class="btn-browse" id="btn-file">Browse</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>SAVE PDF LOCATION</label>
+      <div class="input-row">
+        <input
+          type="text"
+          id="folder-path"
+          readonly
+          placeholder="Click browse to choose storage destination..."
+        />
+        <button class="btn-browse" id="btn-folder">Browse</button>
+      </div>
+    </div>
+
+    <button class="btn-action" id="btn-generate">Generate PDF Documents</button>
+    <div id="status"></div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>

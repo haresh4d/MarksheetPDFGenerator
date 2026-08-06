@@ -1,0 +1,27 @@
+{
+  "name": "marksheet-pdf-generator",
+  "version": "1.0.0",
+  "description": "Generate Marksheet Distribution lists from Excel sheets",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack-mac": "electron-builder --mac"
+  },
+  "build": {
+    "appId": "com.marksheet.generator",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg"
+      ]
+    }
+  },
+  "dependencies": {
+    "pdfkit": "^0.15.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  }
+}
