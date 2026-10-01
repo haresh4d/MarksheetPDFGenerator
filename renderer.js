@@ -1,11 +1,42 @@
-const btnFile = document.getElementById("btn-file");
+// Removed btnFile
 const btnFolder = document.getElementById("btn-folder");
 const btnGenerate = document.getElementById("btn-generate");
 const txtFile = document.getElementById("file-path");
 const txtFolder = document.getElementById("folder-path");
 const statusDiv = document.getElementById("status");
+const dropZone = document.getElementById("drop-zone");
 
-btnFile.addEventListener("click", async () => {
+document.addEventListener("dragover", (e) => e.preventDefault());
+document.addEventListener("drop", (e) => e.preventDefault());
+
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  dropZone.classList.add("dragover");
+});
+
+dropZone.addEventListener("dragleave", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  dropZone.classList.remove("dragover");
+});
+
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  dropZone.classList.remove("dragover");
+
+  if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+    const file = e.dataTransfer.files[0];
+    if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+      txtFile.value = window.electronAPI.getFilePath(file);
+    } else {
+      updateStatus("Please drop a valid Excel file (.xlsx or .xls)", "error");
+    }
+  }
+});
+
+dropZone.addEventListener("click", async () => {
   const path = await window.electronAPI.selectFile();
   if (path) txtFile.value = path;
 });
