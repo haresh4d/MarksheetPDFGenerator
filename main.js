@@ -8,8 +8,8 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 650,
-    height: 480,
+    width: 750,
+    height: 580,
     resizable: false,
     titleBarStyle: "hidden", // Native Mac look
     trafficLightPosition: { x: 12, y: 12 },
@@ -51,7 +51,7 @@ ipcMain.handle("dialog:openDirectory", async () => {
 });
 
 // PDF Execution Pipeline
-ipcMain.handle("generate-pdfs", async (event, { filePath, outputDir }) => {
+ipcMain.handle("generate-pdfs", async (event, { filePath, outputDir, docType = "marksheet" }) => {
   try {
     const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
@@ -61,10 +61,17 @@ ipcMain.handle("generate-pdfs", async (event, { filePath, outputDir }) => {
     const groupedData = {};
     rows.forEach((row) => {
       const exam = row["exam"] ? String(row["exam"]).trim() : "";
-      let brCode = row["BR_CODE"] ? String(row["BR_CODE"]).trim() : "";
-      const examNumber = row["EXAMNUMBER"]
-        ? String(row["EXAMNUMBER"]).trim()
-        : "";
+      
+      let brCode = "";
+      let examNumber = "";
+
+      if (docType === "provisional") {
+        brCode = row["BRCODE"] ? String(row["BRCODE"]).trim() : "";
+        examNumber = row["MAP_NUMBER"] ? String(row["MAP_NUMBER"]).trim() : "";
+      } else {
+        brCode = row["BR_CODE"] ? String(row["BR_CODE"]).trim() : "";
+        examNumber = row["EXAMNUMBER"] ? String(row["EXAMNUMBER"]).trim() : "";
+      }
 
       if (brCode === "7") brCode = "07";
 
@@ -83,7 +90,9 @@ ipcMain.handle("generate-pdfs", async (event, { filePath, outputDir }) => {
         );
 
         const safeExamName = exam.replace(/[/\\?%*:|"<>]/g, "_");
-        const pdfFilename = `Marksheet_Distribution_${safeExamName}_BR_${brCode}.pdf`;
+        const pdfFilename = docType === 'provisional' 
+            ? `Provisional_Distribution_${safeExamName}_BR_${brCode}.pdf`
+            : `Marksheet_Distribution_${safeExamName}_BR_${brCode}.pdf`;
         const targetFilePath = path.join(outputDir, pdfFilename);
 
         await generateSignaturePDF(
@@ -91,6 +100,7 @@ ipcMain.handle("generate-pdfs", async (event, { filePath, outputDir }) => {
           brCode,
           sortedExamNumbers,
           targetFilePath,
+          docType
         );
         count++;
       }
@@ -105,7 +115,7 @@ ipcMain.handle("generate-pdfs", async (event, { filePath, outputDir }) => {
   }
 });
 
-function generateSignaturePDF(exam, brCode, examNumbers, fullPath) {
+function generateSignaturePDF(exam, brCode, examNumbers, fullPath, docType = 'marksheet') {
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({ size: "A4", margin: 35 });
@@ -132,11 +142,15 @@ function generateSignaturePDF(exam, brCode, examNumbers, fullPath) {
       while (globalIndex < totalItems) {
         if (pageNum > 1) doc.addPage();
 
+        const titleText = docType === 'provisional'
+            ? `Provisional Certificate Distribution - ${exam}`
+            : `Marksheet Distribution - ${exam}`;
+
         // Header Title Layout
         doc
           .font("Helvetica-Bold")
           .fontSize(16)
-          .text(`Marksheet Distribution - ${exam}`, margin, 30, {
+          .text(titleText, margin, 30, {
             align: "center",
           });
         doc

@@ -118,7 +118,19 @@
   </head>
   <body>
     <div class="app-region"></div>
-    <h1>Marksheet Distribution PDF Builder</h1>
+    <h1>Marksheet & Provisional PDF Builder</h1>
+
+    <div class="card">
+      <label>DOCUMENT TYPE</label>
+      <div class="input-row" style="align-items: center; gap: 20px;">
+        <label style="font-weight: normal; margin: 0; display: flex; align-items: center; gap: 5px;">
+          <input type="radio" name="docType" value="marksheet" checked> Marksheet
+        </label>
+        <label style="font-weight: normal; margin: 0; display: flex; align-items: center; gap: 5px;">
+          <input type="radio" name="docType" value="provisional"> Provisional Degree
+        </label>
+      </div>
+    </div>
 
     <div class="card">
       <label>INPUT EXCEL FILE (.XLSX)</label>

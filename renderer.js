@@ -30,9 +30,12 @@ btnGenerate.addEventListener("click", async () => {
   );
   btnGenerate.disabled = true;
 
+  const docType = document.querySelector('input[name="docType"]:checked').value;
+
   const result = await window.electronAPI.generatePDFs({
     filePath: txtFile.value,
     outputDir: txtFolder.value,
+    docType: docType
   });
 
   btnGenerate.disabled = false;
